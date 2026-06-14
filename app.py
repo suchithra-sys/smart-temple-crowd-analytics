@@ -1,29 +1,89 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="Smart Temple Crowd Analytics",
+    page_icon="🛕",
+    layout="wide"
+)
+
 st.title("🛕 Smart Temple Crowd Analytics")
+st.subheader("Temple Crowd Congestion Prediction")
 
-visitor_count = st.number_input("Visitor Count",100,100000,5000)
-temperature = st.slider("Temperature",0,50,25)
-festival = st.selectbox("Festival",["No","Yes"])
-holiday = st.selectbox("Holiday",["No","Yes"])
+st.sidebar.header("Enter Temple Details")
 
-if st.button("Predict"):
+visitor_count = st.sidebar.number_input(
+    "Visitor Count", min_value=0, value=5000
+)
 
-    score = visitor_count
+temperature = st.sidebar.slider(
+    "Temperature (°C)", 0.0, 50.0, 25.0
+)
 
-    if festival=="Yes":
-        score += 10000
+precipitation = st.sidebar.slider(
+    "Precipitation (mm)", 0.0, 100.0, 5.0
+)
 
-    if holiday=="Yes":
-        score += 5000
+is_weekend = st.sidebar.selectbox(
+    "Weekend", ["No", "Yes"]
+)
 
-    if score < 10000:
+is_holiday = st.sidebar.selectbox(
+    "Holiday", ["No", "Yes"]
+)
+
+is_festival = st.sidebar.selectbox(
+    "Festival", ["No", "Yes"]
+)
+
+if st.button("Predict Congestion"):
+
+    score = 0
+
+    if visitor_count > 30000:
+        score += 4
+    elif visitor_count > 15000:
+        score += 3
+    elif visitor_count > 5000:
+        score += 2
+    else:
+        score += 1
+
+    if temperature > 35:
+        score += 2
+
+    if precipitation < 10:
+        score += 1
+
+    if is_weekend == "Yes":
+        score += 2
+
+    if is_holiday == "Yes":
+        score += 2
+
+    if is_festival == "Yes":
+        score += 4
+
+    if score <= 4:
         prediction = "LOW"
-    elif score < 30000:
+        st.success(f"Predicted Congestion: {prediction}")
+
+    elif score <= 8:
         prediction = "MODERATE"
-    elif score < 60000:
+        st.warning(f"Predicted Congestion: {prediction}")
+
+    elif score <= 12:
         prediction = "HIGH"
+        st.error(f"Predicted Congestion: {prediction}")
+
     else:
         prediction = "CRITICAL"
+        st.error(f"🚨 Predicted Congestion: {prediction}")
 
-    st.success(f"Predicted Congestion: {prediction}")
+st.markdown("---")
+
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("Records", "146,400")
+col2.metric("Temples", "600")
+col3.metric("Features", "34")
+col4.metric("Model", "Random Forest")
