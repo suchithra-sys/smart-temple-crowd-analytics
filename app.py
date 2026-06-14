@@ -1,16 +1,29 @@
 import streamlit as st
-import tarfile
-from pyspark.ml.classification import RandomForestClassificationModel
-
-# Extract model only if folder doesn't exist
-import os
-
-if not os.path.exists("rf_model"):
-    with tarfile.open("rf_model.tar") as tar:
-        tar.extractall()
-
-# Load model
-model = RandomForestClassificationModel.load("rf_model")
 
 st.title("🛕 Smart Temple Crowd Analytics")
-st.write("Model loaded successfully!")
+
+visitor_count = st.number_input("Visitor Count",100,100000,5000)
+temperature = st.slider("Temperature",0,50,25)
+festival = st.selectbox("Festival",["No","Yes"])
+holiday = st.selectbox("Holiday",["No","Yes"])
+
+if st.button("Predict"):
+
+    score = visitor_count
+
+    if festival=="Yes":
+        score += 10000
+
+    if holiday=="Yes":
+        score += 5000
+
+    if score < 10000:
+        prediction = "LOW"
+    elif score < 30000:
+        prediction = "MODERATE"
+    elif score < 60000:
+        prediction = "HIGH"
+    else:
+        prediction = "CRITICAL"
+
+    st.success(f"Predicted Congestion: {prediction}")
