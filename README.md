@@ -1,2 +1,2 @@
 # smart-temple-crowd-analytics
-**Short description:**  Smart Temple Crowd Analytics uses Hadoop, PySpark, Machine Learning, and Streamlit to analyze temple visitor data, predict crowd congestion levels, and provide insights for efficient crowd management and planning.
+Smart Temple Crowd Analytics uses Hadoop, PySpark, Machine Learning, and Streamlit to analyze temple visitor data, predict crowd congestion levels, and provide insights for efficient crowd management and planning.
