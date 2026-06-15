@@ -1,247 +1,292 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import joblib
 import plotly.express as px
+import numpy as np
+
+# ----------------------------------
+# PAGE CONFIG
+# ----------------------------------
 
 st.set_page_config(
-page_title="Smart Temple Crowd Analytics",
-page_icon="🏛",
-layout="wide"
+    page_title="Smart Temple Crowd Analytics",
+    page_icon="🏛️",
+    layout="wide"
 )
 
-# -----------------------------
+# ----------------------------------
+# SIDEBAR
+# ----------------------------------
 
-# Sidebar
+st.sidebar.title("🏛️ Smart Temple Analytics")
 
-# -----------------------------
-
-st.sidebar.title("🏛 Navigation")
 page = st.sidebar.radio(
-"Select Page",
-["Home", "Analytics", "Prediction", "Crowd Alerts", "About"]
+    "Navigation",
+    ["Home", "Analytics", "Prediction", "Crowd Alerts", "About"]
 )
 
-# -----------------------------
-
-# Home Page
-
-# -----------------------------
+# ==================================
+# HOME PAGE
+# ==================================
 
 if page == "Home":
 
-```
-st.title("🏛 Smart Temple Crowd Analytics")
-st.subheader("Temple Crowd Prediction & Management Dashboard")
+    st.title("🏛️ Smart Temple Crowd Analytics")
+    st.subheader("Big Data & Machine Learning Based Crowd Prediction System")
 
-c1, c2, c3, c4 = st.columns(4)
+    st.markdown("---")
 
-c1.metric("Total Temples", "1,250")
-c2.metric("Total Visitors", "2.4 M")
-c3.metric("High Crowd Alerts", "185")
-c4.metric("Model Accuracy", "94%")
+    col1, col2, col3, col4 = st.columns(4)
 
-st.markdown("---")
+    col1.metric("Temples", "1,250")
+    col2.metric("Visitors", "2.4M")
+    col3.metric("Alerts", "185")
+    col4.metric("Accuracy", "94%")
 
-st.info(
-    """
-    Smart Temple Crowd Analytics uses Big Data and Machine Learning
-    to predict temple congestion levels and assist authorities
-    in crowd management and resource planning.
-    """
-)
+    st.markdown("---")
 
-chart_data = pd.DataFrame({
-    "Month":["Jan","Feb","Mar","Apr","May","Jun"],
-    "Visitors":[12000,15000,18000,22000,25000,30000]
-})
+    st.info("""
+    Smart Temple Crowd Analytics uses Hadoop, PySpark,
+    Machine Learning and Streamlit to predict temple crowd
+    congestion and help authorities manage resources efficiently.
+    """)
 
-fig = px.line(
-    chart_data,
-    x="Month",
-    y="Visitors",
-    title="Monthly Visitor Trend"
-)
+    visitor_data = pd.DataFrame({
+        "Month":["Jan","Feb","Mar","Apr","May","Jun"],
+        "Visitors":[12000,15000,18000,22000,26000,32000]
+    })
 
-st.plotly_chart(fig, use_container_width=True)
-```
+    fig = px.line(
+        visitor_data,
+        x="Month",
+        y="Visitors",
+        markers=True,
+        title="Monthly Temple Visitor Trend"
+    )
 
-# -----------------------------
+    st.plotly_chart(fig, use_container_width=True)
 
-# Analytics Page
-
-# -----------------------------
+# ==================================
+# ANALYTICS PAGE
+# ==================================
 
 elif page == "Analytics":
 
-```
-st.title("📊 Analytics Dashboard")
+    st.title("📊 Analytics Dashboard")
 
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
+    with col1:
 
-    crowd = pd.DataFrame({
-        "Level":["Low","Moderate","High","Critical"],
-        "Count":[1200,3500,2200,900]
+        crowd_data = pd.DataFrame({
+            "Level":["Low","Moderate","High","Critical"],
+            "Count":[1500,3200,1800,700]
+        })
+
+        fig = px.pie(
+            crowd_data,
+            names="Level",
+            values="Count",
+            title="Crowd Distribution"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+
+        feature_data = pd.DataFrame({
+            "Feature":[
+                "Visitor Count",
+                "Weekend",
+                "Holiday",
+                "Festival",
+                "Temperature",
+                "Rainfall"
+            ],
+            "Importance":[
+                0.55,
+                0.12,
+                0.09,
+                0.08,
+                0.04,
+                0.02
+            ]
+        })
+
+        fig = px.bar(
+            feature_data,
+            x="Feature",
+            y="Importance",
+            title="Feature Importance"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    weather = pd.DataFrame({
+        "Temperature":[25,27,29,31,33,35,37],
+        "Visitors":[1200,1800,2500,3200,4200,5300,6000]
     })
 
-    fig = px.pie(
-        crowd,
-        names="Level",
-        values="Count",
-        title="Crowd Distribution"
+    fig = px.scatter(
+        weather,
+        x="Temperature",
+        y="Visitors",
+        title="Temperature vs Visitors"
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
-with col2:
-
-    feature = pd.DataFrame({
-        "Feature":[
-            "Visitor Count",
-            "Weekend",
-            "Holiday",
-            "Festival",
-            "Temperature",
-            "Rainfall"
-        ],
-        "Importance":[
-            0.55,
-            0.12,
-            0.09,
-            0.06,
-            0.04,
-            0.02
-        ]
-    })
-
-    fig = px.bar(
-        feature,
-        x="Feature",
-        y="Importance",
-        title="Feature Importance"
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-```
-
-# -----------------------------
-
-# Prediction Page
-
-# -----------------------------
+# ==================================
+# PREDICTION PAGE
+# ==================================
 
 elif page == "Prediction":
 
-```
-st.title("🔮 Temple Crowd Prediction")
+    st.title("🔮 Crowd Prediction")
 
-visitor = st.number_input(
-    "Visitor Count",
-    min_value=0,
-    value=5000
-)
+    visitor = st.number_input(
+        "Visitor Count",
+        min_value=0,
+        value=5000
+    )
 
-temp = st.slider(
-    "Temperature (°C)",
-    10.0,
-    50.0,
-    32.0
-)
+    temp = st.slider(
+        "Temperature (°C)",
+        10.0,
+        50.0,
+        32.0
+    )
 
-rain = st.slider(
-    "Precipitation (mm)",
-    0.0,
-    100.0,
-    20.0
-)
+    rain = st.slider(
+        "Rainfall (mm)",
+        0.0,
+        100.0,
+        10.0
+    )
 
-weekend = st.selectbox(
-    "Weekend",
-    ["No","Yes"]
-)
+    weekend = st.selectbox(
+        "Weekend",
+        ["No","Yes"]
+    )
 
-festival = st.selectbox(
-    "Festival",
-    ["No","Yes"]
-)
+    festival = st.selectbox(
+        "Festival",
+        ["No","Yes"]
+    )
 
-holiday = st.selectbox(
-    "Holiday",
-    ["No","Yes"]
-)
+    holiday = st.selectbox(
+        "Holiday",
+        ["No","Yes"]
+    )
 
-if st.button("Predict Crowd Level"):
+    if st.button("Predict Crowd Level"):
 
-    if visitor < 6000:
-        level = "🟢 Low"
+        score = visitor
 
-    elif visitor < 12000:
-        level = "🟡 Moderate"
+        if weekend == "Yes":
+            score += 3000
 
-    elif visitor < 20000:
-        level = "🟠 High"
+        if festival == "Yes":
+            score += 5000
 
-    else:
-        level = "🔴 Critical"
+        if holiday == "Yes":
+            score += 4000
 
-    st.success(f"Predicted Congestion Level : {level}")
+        if score < 10000:
+            level = "🟢 LOW"
 
-    st.subheader("Recommendations")
+        elif score < 18000:
+            level = "🟡 MODERATE"
 
-    st.write("✓ Increase Security Personnel")
-    st.write("✓ Manage Entry Gates")
-    st.write("✓ Monitor Visitor Flow")
-    st.write("✓ Improve Parking Control")
-```
+        elif score < 25000:
+            level = "🟠 HIGH"
 
-# -----------------------------
+        else:
+            level = "🔴 CRITICAL"
 
-# Crowd Alerts
+        st.success(f"Predicted Crowd Level: {level}")
 
-# -----------------------------
+        st.subheader("Recommended Actions")
+
+        if "LOW" in level:
+            st.success("Normal Operations")
+
+        elif "MODERATE" in level:
+            st.warning("Increase Security Personnel")
+
+        elif "HIGH" in level:
+            st.warning("Open Additional Gates")
+
+        else:
+            st.error("Deploy Emergency Crowd Management Team")
+
+# ==================================
+# CROWD ALERTS
+# ==================================
 
 elif page == "Crowd Alerts":
 
-```
-st.title("🚨 Crowd Alert Center")
+    st.title("🚨 Crowd Alert Center")
 
-st.error("🔴 Critical Alert")
-st.warning("🟠 High Alert")
-st.info("🟡 Moderate Alert")
-st.success("🟢 Normal")
-```
+    col1, col2 = st.columns(2)
 
-# -----------------------------
+    with col1:
 
-# About
+        st.success("🟢 LOW ALERT")
+        st.write("Normal Crowd Flow")
 
-# -----------------------------
+        st.info("🟡 MODERATE ALERT")
+        st.write("Monitor Visitor Activity")
+
+    with col2:
+
+        st.warning("🟠 HIGH ALERT")
+        st.write("Increase Staff Deployment")
+
+        st.error("🔴 CRITICAL ALERT")
+        st.write("Emergency Crowd Control Required")
+
+# ==================================
+# ABOUT PAGE
+# ==================================
 
 elif page == "About":
 
-```
-st.title("ℹ About Project")
+    st.title("ℹ️ About Project")
 
-st.markdown(
-    """
+    st.markdown("""
     ### Smart Temple Crowd Analytics
 
-    Technologies Used:
+    This project integrates:
 
-    - Hadoop HDFS
-    - Apache Spark
+    ✅ Hadoop HDFS
+
+    ✅ Apache Spark
+
+    ✅ PySpark
+
+    ✅ Machine Learning
+
+    ✅ Random Forest Classification
+
+    ✅ Data Analytics
+
+    ✅ Streamlit Dashboard
+
+    ### Objective
+
+    Predict temple crowd congestion levels and help temple
+    authorities make data-driven decisions for crowd management,
+    safety, resource allocation, and visitor experience.
+
+    ### Technologies
+
+    - Hadoop
+    - HDFS
     - PySpark
-    - Machine Learning
     - Random Forest
+    - Python
     - Streamlit
-    - Data Analytics
-
-    Objective:
-
-    Predict temple congestion levels and assist temple authorities
-    in crowd management using Big Data technologies.
-    """
-)
-```
+    - Plotly
+    """)
